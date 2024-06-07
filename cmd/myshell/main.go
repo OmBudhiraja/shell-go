@@ -19,6 +19,7 @@ const (
 type Command struct {
 	Type    CommandType
 	Handler func([]string)
+	Path    string
 }
 
 var commands = map[string]Command{}
@@ -75,17 +76,16 @@ func initCommands() {
 
 	}
 
-	registerCommand("echo", Builtin, echoCmdHandler)
-	registerCommand("exit", Builtin, exitCmdHandler)
-	registerCommand("type", Builtin, typeCmdHandler)
-
 	for _, cmd := range externalCommand {
 		registerCommand(cmd.Name, Executable, func(args []string) {
 			executeExternalCommand(cmd.Path, args)
-		})
+		}, cmd.Path)
 
 	}
 
+	registerCommand("echo", Builtin, echoCmdHandler, "")
+	registerCommand("exit", Builtin, exitCmdHandler, "")
+	registerCommand("type", Builtin, typeCmdHandler, "")
 }
 
 func executeExternalCommand(cmdPath string, args []string) {
@@ -102,10 +102,11 @@ func executeExternalCommand(cmdPath string, args []string) {
 
 }
 
-func registerCommand(name string, cmdType CommandType, handler func([]string)) {
+func registerCommand(name string, cmdType CommandType, handler func([]string), cmdPath string) {
 	commands[name] = Command{
 		Type:    cmdType,
 		Handler: handler,
+		Path:    cmdPath,
 	}
 }
 
@@ -150,6 +151,6 @@ func typeCmdHandler(args []string) {
 	if cmd.Type == Builtin {
 		fmt.Printf("%s is a shell builtin\n", args[0])
 	} else {
-		fmt.Printf("%s not found\n", args[0])
+		fmt.Printf("%s is %s\n", args[0], cmd.Path)
 	}
 }
