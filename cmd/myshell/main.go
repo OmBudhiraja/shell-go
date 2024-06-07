@@ -36,6 +36,8 @@ func evaluate(input string) {
 	switch command {
 	case "exit":
 		os.Exit(0)
+	case "echo":
+		fmt.Println(strings.Join(args, " "))
 
 	default:
 		fmt.Printf("%s: command not found\n", command)
