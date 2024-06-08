@@ -86,6 +86,8 @@ func initCommands() {
 	registerCommand("echo", Builtin, echoCmdHandler, "")
 	registerCommand("exit", Builtin, exitCmdHandler, "")
 	registerCommand("type", Builtin, typeCmdHandler, "")
+	registerCommand("pwd", Builtin, pwdCmdHandler, "")
+	registerCommand("cd", Builtin, cdCmdHandler, "")
 }
 
 func executeExternalCommand(cmdPath string, args []string) {
@@ -153,4 +155,19 @@ func typeCmdHandler(args []string) {
 	} else {
 		fmt.Printf("%s is %s\n", args[0], cmd.Path)
 	}
+}
+
+func pwdCmdHandler(args []string) {
+	dir, err := os.Getwd()
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(dir)
+}
+
+func cdCmdHandler(args []string) {
+	// TODO:
 }
