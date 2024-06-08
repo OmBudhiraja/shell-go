@@ -170,4 +170,7 @@ func pwdCmdHandler(args []string) {
 
 func cdCmdHandler(args []string) {
 	// TODO:
+	if err := os.Chdir(args[0]); err != nil {
+		fmt.Printf("cd: %s: No such file or directory\n", args[0])
+	}
 }
