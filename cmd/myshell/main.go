@@ -169,8 +169,26 @@ func pwdCmdHandler(args []string) {
 }
 
 func cdCmdHandler(args []string) {
-	// TODO:
-	if err := os.Chdir(args[0]); err != nil {
+
+	if len(args) == 0 {
+		fmt.Println("cd: missing argument")
+		return
+	}
+
+	targetpath := args[0]
+	if targetpath[0] == '~' {
+		homeDir, err := os.UserHomeDir()
+
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		// replace ~ with home directory
+		targetpath = filepath.Join(homeDir, targetpath[1:])
+	}
+
+	if err := os.Chdir(targetpath); err != nil {
 		fmt.Printf("cd: %s: No such file or directory\n", args[0])
 	}
 }
